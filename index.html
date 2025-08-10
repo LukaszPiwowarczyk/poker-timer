@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poker Texas Hold'em Timer PRO+</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: #0f0f0f;
+        color: #fff;
+        margin: 0;
+        display: flex;
+        flex-direction: row;
+        height: 100vh;
+    }
+    header {
+        background: #1a1a1a;
+        padding: 20px;
+        font-size: 2rem;
+        color: #00ff80;
+        letter-spacing: 2px;
+        text-align: center;
+    }
+    main {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    aside {
+        flex: 1;
+        background: #1a1a1a;
+        padding: 20px;
+        overflow-y: auto;
+    }
+    #blinds {
+        font-size: 3rem;
+        margin: 20px 0;
+        color: #ffd700;
+    }
+    #timer {
+        font-size: 10rem;
+        margin: 40px 0;
+        font-weight: bold;
+    }
+    .controls {
+        margin: 20px 0;
+        text-align: center;
+    }
+    button, input {
+        font-size: 1.5rem;
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .start { background: #00ff80; color: #000; }
+    .stop { background: #ff4d4d; color: #fff; }
+    .reset { background: #ffd700; color: #000; }
+    .fullscreen { background: #3399ff; color: #fff; }
+    input {
+        width: 100px;
+        text-align: center;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 1.5rem;
+    }
+    th, td {
+        border-bottom: 1px solid #444;
+        padding: 10px;
+        text-align: center;
+    }
+    tr.active {
+        background: #00ff80;
+        color: #000;
+        font-weight: bold;
+    }
+    @media (max-width: 1024px) {
+        body { flex-direction: column; }
+        aside { order: -1; }
+        #timer { font-size: 6rem; }
+        table { font-size: 1.2rem; }
+    }
+</style>
+</head>
+<body>
+
+<main>
+    <header>POKER TIMER</header>
+    <div id="blinds">Blindy: 50 / 100</div>
+    <div id="timer">10:00</div>
+
+    <div>
+        <label style="font-size:1.2rem;">
+            Czas rundy (min):
+            <input type="number" id="roundTime" value="10" min="1">
+        </label>
+    </div>
+
+    <div class="controls">
+        <button class="start" onclick="startTimer()">▶ Start</button>
+        <button class="stop" onclick="stopTimer()">⏸ Stop</button>
+        <button class="reset" onclick="resetTimer()">🔄 Reset</button>
+        <button class="fullscreen" onclick="toggleFullscreen()">⛶ Pełny ekran</button>
+    </div>
+</main>
+
+<aside>
+    <h2>Poziomy Blindów</h2>
+    <table id="blindsTable"></table>
+</aside>
+
+<script>
+let blindsList = [
+    { small: 50, big: 100 },
+    { small: 100, big: 200 },
+    { small: 200, big: 400 },
+    { small: 400, big: 800 },
+    { small: 800, big: 1600 },
+    { small: 1600, big: 3200 },
+    { small: 3200, big: 6400 },
+    { small: 6400, big: 12800 }
+];
+let roundIndex = 0;
+let time;
+let timerInterval;
+let sound = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+
+function updateDisplay() {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    document.getElementById("timer").textContent =
+        `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById("blinds").textContent =
+        `Blindy: ${blindsList[roundIndex].small} / ${blindsList[roundIndex].big}`;
+    updateTableHighlight();
+}
+
+function startTimer() {
+    if (!timerInterval) {
+        timerInterval = setInterval(() => {
+            if (time > 0) {
+                time--;
+                updateDisplay();
+            } else {
+                stopTimer();
+                sound.play();
+                nextRound();
+            }
+        }, 1000);
+    }
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer() {
+    stopTimer();
+    let minutes = parseInt(document.getElementById("roundTime").value) || 10;
+    time = minutes * 60;
+    updateDisplay();
+}
+
+function nextRound() {
+    if (roundIndex < blindsList.length - 1) {
+        roundIndex++;
+        saveState();
+        resetTimer();
+        startTimer();
+    } else {
+        alert("Gra zakończona – brak kolejnych blindów!");
+    }
+}
+
+function saveState() {
+    localStorage.setItem("pokerRound", roundIndex);
+    localStorage.setItem("pokerTime", document.getElementById("roundTime").value);
+}
+
+function loadState() {
+    if (localStorage.getItem("pokerRound")) {
+        roundIndex = parseInt(localStorage.getItem("pokerRound"));
+    }
+    if (localStorage.getItem("pokerTime")) {
+        document.getElementById("roundTime").value = localStorage.getItem("pokerTime");
+    }
+    resetTimer();
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+function renderBlindsTable() {
+    let table = document.getElementById("blindsTable");
+    table.innerHTML = `
+        <tr><th>Poziom</th><th>Small</th><th>Big</th></tr>
+        ${blindsList.map((b, i) => `
+            <tr data-index="${i}">
+                <td>${i + 1}</td>
+                <td>${b.small}</td>
+                <td>${b.big}</td>
+            </tr>
+        `).join("")}
+    `;
+    updateTableHighlight();
+}
+
+function updateTableHighlight() {
+    document.querySelectorAll("#blindsTable tr").forEach(row => {
+        row.classList.remove("active");
+        if (row.dataset.index == roundIndex) {
+            row.classList.add("active");
+        }
+    });
+}
+
+// Inicjalizacja
+renderBlindsTable();
+loadState();
+</script>
+
+</body>
+</html>
