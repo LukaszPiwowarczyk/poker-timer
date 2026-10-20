@@ -1,0 +1,206 @@
+  :root{
+    --bg:#0b0b0b;
+    --panel:#151515;
+    --muted:#bdbdbd;
+    --accent:#00ff80;
+    --gold:#ffd700;
+    --card:#e6e6e6;
+    --card-contrast:#1a1a1a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family: "Segoe UI", Roboto, system-ui, Arial;background:var(--bg);color:#fff}
+  .app {
+    max-width:1400px;
+    margin:16px auto;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+    display:flex;
+    flex-direction:column;
+    min-height:80vh;
+  }
+
+  /* Header */
+  header.app-header{
+    padding:18px 24px;
+    background:var(--panel);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  header.app-header h1{
+    margin:0;font-size:22px;color:var(--accent);letter-spacing:2px;
+  }
+  header.app-header .subtitle{color:var(--muted);font-size:13px}
+
+  /* main layout: left - settings, right - game */
+  .main {
+    display:flex;
+    gap:0;
+    min-height:calc(100% - 86px);
+  }
+
+  /* SETTINGS panel */
+  .panel {
+    padding:20px;
+  }
+  .settings {
+    width:420px;
+    background:var(--panel);
+    border-right:1px solid rgba(255,255,255,0.02);
+  }
+  .settings h2{margin:0 0 8px 0;color:var(--accent);font-size:18px}
+  label{display:block;color:var(--muted);margin-top:12px;font-size:13px}
+  input[type="number"], input[type="text"]{
+    width:100%;padding:10px 12px;margin-top:6px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:#fff;font-size:16px
+  }
+  .row{display:flex;gap:8px}
+  .row .col{flex:1}
+  .btn{display:inline-block;padding:10px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700;margin-top:10px}
+  .btn-primary{background:var(--accent);color:#000}
+  .btn-ghost{background:transparent;color:var(--accent);border:1px solid rgba(255,255,255,0.04)}
+  .btn-danger{background:#ff4d4d;color:#fff}
+
+  table{width:100%;border-collapse:collapse;margin-top:14px;color:#fff}
+  th,td{padding:8px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.03);font-size:14px}
+  th{color:var(--muted);font-weight:600}
+  .levels-actions{display:flex;gap:8px;justify-content:center}
+
+  /* GAME panel */
+  .game {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding:28px;
+    gap:12px;
+  }
+
+  /* Stats cards row */
+  .stats-row {
+    display:flex;
+    gap:16px;
+    width:100%;
+    justify-content:space-between;
+    align-items:stretch;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .card {
+    background:var(--card);
+    color:var(--card-contrast);
+    padding:18px;
+    border-radius:10px;
+    flex:1 1 calc(25% - 16px);
+    min-width:210px;
+    position:relative;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+  .card .title {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-weight:700;
+    font-size:16px;
+    color:var(--card-contrast);
+    margin-bottom:8px;
+  }
+  .card .value {
+    font-size:34px;
+    font-weight:800;
+  }
+  .card .small {font-size:13px;color:rgba(0,0,0,0.6);font-weight:600}
+
+  .svg-icon {
+    width:28px;height:28px;opacity:0.75;
+  }
+
+  /* stat with buttons */
+  .stat-controls {
+    display:flex;gap:8px;align-items:center;
+    font-size:26px;font-weight:800;
+  }
+  .stat-controls button {
+    background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:22px;font-weight:700;
+  }
+
+  /* center large timer area */
+  .timer-area {
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .timer-card {
+    background:transparent;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .round-timer {
+    font-size:120px;
+    font-weight:900;
+    color:#fff;
+    line-height:1;
+    min-width:420px;
+    text-align:center;
+  }
+  .break-timer {
+    font-size:120px;
+    font-weight:900;
+    color:var(--gold);
+    text-align:center;
+    animation: pulse 1.3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(255,215,0,0)); }
+    50% { transform: scale(1.02); filter: drop-shadow(0 6px 26px rgba(255,215,0,0.12)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(255,215,0,0)); }
+  }
+
+  .meta {
+    margin-top:6px;color:var(--muted);font-size:16px;text-align:center;
+  }
+
+  /* controls row */
+  .controls-row {display:flex;gap:12px;align-items:center;justify-content:center;margin-top:6px;flex-wrap:wrap}
+  .controls-row .btn{font-size:18px;padding:12px 18px}
+
+  /* small info row */
+  .info-row {display:flex;gap:12px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap}
+  .info-pill{background:rgba(255,255,255,0.03);padding:8px 12px;border-radius:999px;color:var(--muted);font-weight:600}
+
+  footer.note{margin-top:20px;color:var(--muted);font-size:13px}
+
+  /* responsive */
+  @media (max-width:1100px){
+    .round-timer, .break-timer {font-size:82px;min-width:300px}
+    .card .value {font-size:28px}
+  }
+  @media (max-width:820px){
+    .main{flex-direction:column}
+    .settings{width:100%}
+    .stats-row {gap:12px}
+    .card {flex:1 1 calc(50% - 12px)}
+    .round-timer, .break-timer {font-size:64px;min-width:220px}
+  }
+  @media (max-width:480px){
+    .card {padding:12px}
+    .card .title{font-size:14px}
+    .card .value{font-size:22px}
+    .round-timer, .break-timer {font-size:44px;min-width:160px}
+    .controls-row .btn{padding:10px 14px}
+  }
+
+  /* small helpers */
+  .hidden{display:none}
+  .muted{color:var(--muted);}
+  .center{text-align:center}
