@@ -39,19 +39,19 @@ test('starts the game and advances to the next blind level', async ({ page }) =>
 test('pause starts a break and resume continues the round timer', async ({ page }) => {
   await page.locator('#btnStartGame').click();
   await page.locator('#btnStart').click();
-  await page.clock.fastForward(2_000);
+  await page.clock.runFor(2_000);
   await expect(page.locator('#roundTimer')).toHaveText('9:58');
 
   await page.locator('#btnPause').click();
   await expect(page.locator('#breakTimerWrap')).toBeVisible();
-  await page.clock.fastForward(3_000);
+  await page.clock.runFor(3_000);
   await expect(page.locator('#breakTimer')).toContainText('0:03');
   await expect(page.locator('#roundTimer')).toHaveText('9:58');
 
   await page.locator('#btnPause').click();
   await expect(page.locator('#breakTimerWrap')).toBeHidden();
   await expect(page.locator('#roundTimerWrap')).toBeVisible();
-  await page.clock.fastForward(1_000);
+  await page.clock.runFor(1_000);
   await expect(page.locator('#roundTimer')).toHaveText('9:57');
 });
 
@@ -93,7 +93,7 @@ test('persists levels and rebuy/add-on counters after reload', async ({ page }) 
 test('reset stops the game and returns to settings', async ({ page }) => {
   await page.locator('#btnStartGame').click();
   await page.locator('#btnStart').click();
-  await page.clock.fastForward(2_000);
+  await page.clock.runFor(2_000);
   await page.evaluate(() => { window.confirm = () => true; });
   await page.locator('#btnReset').click();
 
